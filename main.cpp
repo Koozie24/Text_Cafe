@@ -84,6 +84,7 @@ class Customer{
 
 std::vector<Customer> customer_vec;
 
+//function runs in detached thread to continuosly read input through getline
 void take_input(){
     for(;;){
         //skip leading ws
@@ -91,13 +92,7 @@ void take_input(){
     }
 }
 
-void elapsed_time(){
-    for(;;){
-        current_time = time(0);
-        sleep(1);
-    }
-}
-
+//function takes string argument of order. prints the required ingredient list based on current customer selected. 
 void show_ingredients(std::string current_customer_order){
 
     std::cout << "---------------------------------" << std::endl;
@@ -115,6 +110,7 @@ void show_ingredients(std::string current_customer_order){
     }
 }
 
+//function takes two string arguments and prints current screen
 void print_screen(std::string current_customer, std::string current_customer_order){
     std::cout << "------------------------------------------------" << std::endl;
     std::cout << "|  Current customers in cafe:   | Earnings: $" << total_earnings << " |" << std::endl;
@@ -135,10 +131,12 @@ void print_screen(std::string current_customer, std::string current_customer_ord
     }
 }
 
+//function clears current terminal screen
 void clear_screen(){
     std::cout << "\033[2J\033[1;1H";
 }
 
+//function takes integer time argument and two string arguments to instantiate new customer object. 
 void new_customer(int total_time, std::string current_cust_selected, std::string current_customer_order){
     if(total_time % 10 == 0){
         std::cout << "Time is: " << total_time << " looks like we need a new customer" << std::endl;
@@ -166,11 +164,12 @@ Customer* find_cust_obj_by_string_name(std::string &search_name){
     return nullptr;
 }
 
-//add ingredient to customers added ingredients vector
+//function takes pointer to customer object and string. adds ingredient to customer objects' added ingredients vector
 void add_ingredient_to_order_vect(Customer* customer, std::string ingredient){
     customer->added_ingredients.push_back(ingredient);
 }
 
+//function takes 4 required and 2 option string arguments. initializes two vectors, iterates through nested loops to compare and check they are the same. returns 0 or 1 if incorrect or correct, respectively. 
 int check_ingredients_correct(std::string first_added, std::string second_added, std::string compare_one, std::string compare_two, std::string third_added = "", std::string compare_three = ""){
     std::vector<std::string> added_vec {first_added, second_added, third_added};
     std::vector<std::string> referencing_vec {compare_one, compare_two, compare_three};
@@ -180,8 +179,9 @@ int check_ingredients_correct(std::string first_added, std::string second_added,
     for(int i = 0; i < 3; i++){
         for(int j = 0; j < 3; j++){
             if(added_vec[i] == referencing_vec[j]){
-                //std::cout << "added vec i: " << added_vec[i] << " ref vec j: " << referencing_vec[j] << std::endl;
+                //std::cout << "ADDED vec i: " << added_vec[i] << " ref vec j: " << referencing_vec[j] << std::endl;
                 matches++;
+                break;
             }
         }
     }
@@ -191,18 +191,21 @@ int check_ingredients_correct(std::string first_added, std::string second_added,
         std::cout << "You order was delivered to the customer and was correct. You get a payout!" << std::endl;
     }
     else{
+        std::cout << "Sorry your order was incorrect, thats coming out of your paycheck!" << std::endl;
         ret_val = 0;
     }
 
     return ret_val;
 }
 
+//Function takes pointer to customer object and string of input order. Verifies ingredients added and returns either 0 or 1, if incorrect or correct, respectively. 
 int verify_added_ingredients(Customer* customer, std::string current_customer_order){
-    int ingredient_check;
+    int ingredient_check = 0;
     std::string first_added, second_added, third_added, compare_one, compare_two, compare_three;
 
     int number_of_ingredients = customer->added_ingredients.size();
 
+    //initial check minimum number of ingredients added
     if(number_of_ingredients >= 2){
         first_added = customer->added_ingredients[0];
         second_added = customer->added_ingredients[1];
@@ -223,7 +226,7 @@ int verify_added_ingredients(Customer* customer, std::string current_customer_or
             }   
         }
 
-        else if (current_customer_order == "cheeseburger" || current_customer_order == "pepperoni pizza" ){
+        else if ((current_customer_order == "cheeseburger" || current_customer_order == "pepperoni pizza") && number_of_ingredients == 3){
             third_added = customer->added_ingredients[2];
 
             if(current_customer_order == "cheeseburger"){
@@ -231,19 +234,16 @@ int verify_added_ingredients(Customer* customer, std::string current_customer_or
                 compare_two = cheeseburger.ingredient_two;
                 compare_three = cheeseburger.ingredient_three;
                 std::cout << "Made it to 231" << std::endl;
-                ingredient_check = check_ingredients_correct(first_added, second_added, third_added, compare_one, compare_two, compare_three);
+                ingredient_check = check_ingredients_correct(first_added, second_added, compare_one, compare_two, third_added, compare_three);
             }
             else{
                 compare_one = pepperoni_pizza.ingredient_one;
                 compare_two = pepperoni_pizza.ingredient_two;
                 compare_three = pepperoni_pizza.ingredient_three;
                 std::cout << "Made it to 238" << std::endl;
-                ingredient_check = check_ingredients_correct(first_added, second_added, third_added, compare_one, compare_two, compare_three);
+                ingredient_check = check_ingredients_correct(first_added, second_added, compare_one, compare_two, third_added, compare_three);
             }
         }
-    }
-    else{
-        ingredient_check = 0;
     }
 
     return ingredient_check;
@@ -295,8 +295,8 @@ int main(){
                 std::cout << "Added ingredient: " << input_command << " for " << current_customer << "'s order. " << std::endl;
             }
             else if (!current_customer.empty() && input_command == "serve" && my_cust_obj){
-                std::cout << "Registered serve command" << std::endl;
                 check_submit_correct = verify_added_ingredients(my_cust_obj, current_customer_order);
+
                 if(check_submit_correct == 1){
                     total_earnings =  total_earnings + my_cust_obj->max_payout;
                 }
@@ -304,6 +304,12 @@ int main(){
                     std::cout << my_cust_obj->max_payout << std::endl;
                     total_earnings = total_earnings - my_cust_obj->max_payout;
                 }
+        
+                current_customer.clear();
+                current_customer_order.clear();
+
+                clear_screen();
+                print_screen(current_customer, current_customer_order);
             }
             else{
                 for(int i = 0; i < customer_vec.size(); i++){
