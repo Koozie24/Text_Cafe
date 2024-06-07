@@ -41,6 +41,8 @@ class Customer{
         time_t cust_arrives = time(0);
         std::vector<std::string> added_ingredients;
         int max_payout = max_order_payout();
+        int served = 0;
+        int arrival_order = customer_count - 1;
 
         //constructor
         Customer(std::string name, std::string order)
@@ -115,14 +117,17 @@ void print_screen(std::string current_customer, std::string current_customer_ord
     std::cout << "------------------------------------------------" << std::endl;
     std::cout << "|  Current customers in cafe:   | Earnings: $" << total_earnings << " |" << std::endl;
     std::cout << "------------------------------------------------" << std::endl;
+
     for(int i = 0; i < customer_vec.size(); i++){
-        int size_of_print = 25 - (customer_vec[i].customer_name.size() + customer_vec[i].order.size());
 
-        std::string str_sep(size_of_print, ' ');
-        std::cout << "|    " << customer_vec[i].customer_name << ": "
-        << customer_vec[i].order << str_sep << "| " << std::endl;
+        if(customer_vec[i].served == 0){
+            int size_of_print = 25 - (customer_vec[i].customer_name.size() + customer_vec[i].order.size());
+
+            std::string str_sep(size_of_print, ' ');
+            std::cout << "|    " << customer_vec[i].customer_name << ": "
+            << customer_vec[i].order << str_sep << "| " << std::endl;
+        }
     }
-
     std::cout << "---------------------------------" << std::endl;
 
     if(!current_customer.empty()){
@@ -301,7 +306,12 @@ int main(){
                     std::cout << my_cust_obj->max_payout << std::endl;
                     total_earnings = total_earnings - my_cust_obj->max_payout;
                 }
-        
+                
+                my_cust_obj->served = 1;
+
+                int vec_index = my_cust_obj->arrival_order;
+                customer_vec[vec_index].served = 1;
+
                 current_customer.clear();
                 current_customer_order.clear();
 
