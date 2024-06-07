@@ -210,20 +210,19 @@ int verify_added_ingredients(Customer* customer, std::string current_customer_or
         first_added = customer->added_ingredients[0];
         second_added = customer->added_ingredients[1];
 
-        if(current_customer_order == "hamburger" || current_customer_order == "cheese pizza" ){
+        if(current_customer_order == "hamburger" || current_customer_order == "cheese pizza"){
             if(current_customer_order == "hamburger"){
                 compare_one = hamburger.ingredient_one;
                 compare_two = hamburger.ingredient_two;
-                std::cout << "Made it to 213" << std::endl;
-                ingredient_check = check_ingredients_correct(first_added, second_added, compare_one, compare_two);
             }
             else{
                 compare_one = cheese_pizza.ingredient_one;
                 compare_two = cheese_pizza.ingredient_two;
-                std::cout << "Made it to 219" << std::endl;
-                ingredient_check = check_ingredients_correct(first_added, second_added, compare_one, compare_two);
                 std::cout << ingredient_check << std::endl;
             }   
+
+            ingredient_check = check_ingredients_correct(first_added, second_added, compare_one, compare_two);
+
         }
 
         else if ((current_customer_order == "cheeseburger" || current_customer_order == "pepperoni pizza") && number_of_ingredients == 3){
@@ -233,16 +232,14 @@ int verify_added_ingredients(Customer* customer, std::string current_customer_or
                 compare_one = cheeseburger.ingredient_one;
                 compare_two = cheeseburger.ingredient_two;
                 compare_three = cheeseburger.ingredient_three;
-                std::cout << "Made it to 231" << std::endl;
-                ingredient_check = check_ingredients_correct(first_added, second_added, compare_one, compare_two, third_added, compare_three);
             }
             else{
                 compare_one = pepperoni_pizza.ingredient_one;
                 compare_two = pepperoni_pizza.ingredient_two;
                 compare_three = pepperoni_pizza.ingredient_three;
-                std::cout << "Made it to 238" << std::endl;
-                ingredient_check = check_ingredients_correct(first_added, second_added, compare_one, compare_two, third_added, compare_three);
             }
+
+            ingredient_check = check_ingredients_correct(first_added, second_added, compare_one, compare_two, third_added, compare_three);
         }
     }
 
