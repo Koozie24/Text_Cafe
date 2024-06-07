@@ -97,42 +97,43 @@ void take_input(){
 //function takes string argument of order. prints the required ingredient list based on current customer selected. 
 void show_ingredients(std::string current_customer_order){
 
-    std::cout << "---------------------------------" << std::endl;
     if (current_customer_order == "hamburger"){
-        std::cout << "Ingredients needed for Hamburger are: " << hamburger.ingredient_one << " and " << hamburger.ingredient_two << std::endl;
+        std::cout << hamburger.ingredient_one << " and " << hamburger.ingredient_two << "                  |" << std::endl;
     }
     else if (current_customer_order == "cheeseburger"){
-        std::cout << "Ingredients needed for cheesebuger are: " << cheeseburger.ingredient_one << " and " << cheeseburger.ingredient_two << " and " << cheeseburger.ingredient_three << std::endl;
+        std::cout << cheeseburger.ingredient_one << " and " << cheeseburger.ingredient_two << " and " << cheeseburger.ingredient_three << "       |" << std::endl;
     }
     else if (current_customer_order == "cheese pizza"){
-        std::cout << "Ingredients needed for cheese pizza are: " << cheese_pizza.ingredient_one << " and " << cheese_pizza.ingredient_two << std::endl;
+        std::cout << cheese_pizza.ingredient_one << " and " << cheese_pizza.ingredient_two << "               |" << std::endl;
     }
     else if(current_customer_order == "pepperoni pizza"){
-        std::cout << "Ingredients needed for pepperoni pizza are: " << pepperoni_pizza.ingredient_one << " and " << pepperoni_pizza.ingredient_two << " and " << pepperoni_pizza.ingredient_three << std::endl;
+        std::cout << pepperoni_pizza.ingredient_one << " and " << pepperoni_pizza.ingredient_two << " and " << pepperoni_pizza.ingredient_three << " |" << std::endl;
     }
 }
 
 //function takes two string arguments and prints current screen
 void print_screen(std::string current_customer, std::string current_customer_order){
-    std::cout << "------------------------------------------------" << std::endl;
-    std::cout << "|  Current customers in cafe:   | Earnings: $" << total_earnings << " |" << std::endl;
-    std::cout << "------------------------------------------------" << std::endl;
+    std::cout << "------------------------------------------------------------------" << std::endl;
+    std::cout << "|  Current customers in cafe:   | Earnings: $" << total_earnings << "                   |" << std::endl;
+    std::cout << "------------------------------------------------------------------" << std::endl;
 
     for(int i = 0; i < customer_vec.size(); i++){
-
+        //check if already served
         if(customer_vec[i].served == 0){
             int size_of_print = 25 - (customer_vec[i].customer_name.size() + customer_vec[i].order.size());
-
             std::string str_sep(size_of_print, ' ');
             std::cout << "|    " << customer_vec[i].customer_name << ": "
-            << customer_vec[i].order << str_sep << "| " << std::endl;
+            << customer_vec[i].order << str_sep << "| ";
+
+            show_ingredients(customer_vec[i].order);
+            std::cout << std::endl;
         }
     }
-    std::cout << "---------------------------------" << std::endl;
+    std::cout << "------------------------------------------------------------------" << std::endl;
 
     if(!current_customer.empty()){
         std::cout << "Current User Selected: " << current_customer << std::endl;
-        show_ingredients(current_customer_order);
+        //show_ingredients(current_customer_order);
     }
 }
 
@@ -298,7 +299,8 @@ int main(){
             }
             else if (!current_customer.empty() && input_command == "serve" && my_cust_obj){
                 check_submit_correct = verify_added_ingredients(my_cust_obj, current_customer_order);
-
+                
+                //update earnings
                 if(check_submit_correct == 1){
                     total_earnings =  total_earnings + my_cust_obj->max_payout;
                 }
@@ -307,8 +309,8 @@ int main(){
                     total_earnings = total_earnings - my_cust_obj->max_payout;
                 }
                 
+                //update served status
                 my_cust_obj->served = 1;
-
                 int vec_index = my_cust_obj->arrival_order;
                 customer_vec[vec_index].served = 1;
 
