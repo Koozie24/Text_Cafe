@@ -43,6 +43,7 @@ class Customer{
         int max_payout = max_order_payout();
         int served = 0;
         int arrival_order = customer_count - 1;
+        int price_reduced_flag = 0;
 
         //constructor
         Customer(std::string name, std::string order)
@@ -321,7 +322,7 @@ int main(){
                 
                 //update earnings
                 if(check_submit_correct == 1){
-                    total_earnings =  total_earnings + my_cust_obj->max_payout;
+                    total_earnings = total_earnings + my_cust_obj->max_payout;
                 }
                 else if (check_submit_correct == 0){
                     std::cout << my_cust_obj->max_payout << std::endl;
@@ -354,11 +355,42 @@ int main(){
                 }
 
                 input_command.clear();
+                clear_screen();
+                print_screen(current_customer, current_customer_order, my_cust_obj);
             }
         }
 
         elapsed = current_time - start_time + 1;
 
+        for(int i = 0; i < customer_vec.size(); i++){
+            
+            if(customer_vec[i].served == 0){
+                if(current_time - customer_vec[i].cust_arrives >= 15){
+                    Customer* current_obj = find_cust_obj_by_string_name(customer_vec[i].customer_name);
+                    if(current_obj){
+                        total_earnings = total_earnings - (current_obj->max_payout * 2);
+                        current_obj->served = 1;
+                        customer_vec[i].served = 1;
+                        std::cout <<  "Removed a customer!" << std::endl;
+                        clear_screen();
+                        print_screen(current_customer, current_customer_order, current_obj);
+                    }
+                }
+                
+                else if(current_time - customer_vec[i].cust_arrives < 15 && current_time - customer_vec[i].cust_arrives > 8 && customer_vec[i].price_reduced_flag == 0){
+                    Customer* current_obj = find_cust_obj_by_string_name(customer_vec[i].customer_name);
+                    if(current_obj){
+                        current_obj->max_payout *= .5;
+                        customer_vec[i].max_payout *= .5;
+                        customer_vec[i].price_reduced_flag = 1;
+                        current_obj->price_reduced_flag = 1;
+                        std::cout <<  "Reduced a customer payout!" << std::endl;
+                    }
+                }
+                
+            }
+            
+        }
 
         input_command.clear();
 
