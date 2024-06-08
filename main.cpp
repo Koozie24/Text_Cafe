@@ -280,7 +280,7 @@ int main(){
                 clear_screen();
                 print_screen(current_customer, current_customer_order, my_cust_obj);
             }
-            else if((current_customer_order == "pepperoni pizza" || current_customer_order == "cheese pizza") && (input_command == "dough" || input_command == "cheese") && my_cust_obj){
+            else if((current_customer_order == "pepperoni pizza" || current_customer_order == "cheese pizza") && (input_command == "dough" || input_command == "cheese") && my_cust_obj->served == 0){
                 add_ingredient_to_order_vect(my_cust_obj, input_command);
 
                 clear_screen();
@@ -289,7 +289,7 @@ int main(){
                 std::cout << "Added ingredient: " << input_command << " for " << current_customer << "'s order. " << std::endl;
                 std::cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - " << std::endl;
             }
-            else if(current_customer_order == "pepperoni pizza" && input_command == "pepperoni" && my_cust_obj){
+            else if(current_customer_order == "pepperoni pizza" && input_command == "pepperoni" && my_cust_obj->served == 0){
                 add_ingredient_to_order_vect(my_cust_obj, input_command);
 
                 clear_screen();
@@ -298,7 +298,7 @@ int main(){
                 std::cout << "Added ingredient: " << input_command << " for " << current_customer << "'s order. " << std::endl;
                 std::cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - " << std::endl;
             }
-            else if((current_customer_order == "cheeseburger" || current_customer_order == "hamburger") && (input_command == "bun" || input_command == "patty") && my_cust_obj){
+            else if((current_customer_order == "cheeseburger" || current_customer_order == "hamburger") && (input_command == "bun" || input_command == "patty") && my_cust_obj->served == 0){
                 add_ingredient_to_order_vect(my_cust_obj, input_command);
 
                 clear_screen();
@@ -307,7 +307,7 @@ int main(){
                 std::cout << "Added ingredient: " << input_command << " for " << current_customer << "'s order. " << std::endl;
                 std::cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - " << std::endl;
             }
-            else if(current_customer_order == "cheeseburger" && input_command == "cheese" && my_cust_obj){
+            else if(current_customer_order == "cheeseburger" && input_command == "cheese" && my_cust_obj->served == 0){
                 add_ingredient_to_order_vect(my_cust_obj, input_command);
 
                 clear_screen();
@@ -316,7 +316,7 @@ int main(){
                 std::cout << "Added ingredient: " << input_command << " for " << current_customer << "'s order. " << std::endl;
                 std::cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - " << std::endl;
             }
-            else if (!current_customer.empty() && input_command == "serve" && my_cust_obj){
+            else if (!current_customer.empty() && input_command == "serve" && my_cust_obj->served == 0){
                 check_submit_correct = verify_added_ingredients(my_cust_obj, current_customer_order);
                 
                 //update earnings
@@ -341,7 +341,7 @@ int main(){
             }
             else{
                 for(int i = 0; i < customer_vec.size(); i++){
-                    if(customer_vec[i].customer_name == input_command){
+                    if(customer_vec[i].customer_name == input_command && customer_vec[i].served == 0){
                         current_customer.clear();
                         current_customer = input_command;
                         current_customer_order = customer_vec[i].order;
@@ -358,6 +358,7 @@ int main(){
         }
 
         elapsed = current_time - start_time + 1;
+
 
         input_command.clear();
 
