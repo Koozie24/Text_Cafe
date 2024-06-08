@@ -74,14 +74,6 @@ class Customer{
             //customer_count++;
             return customer_name;
         }
-
-        // Overload operator<< to print Customer objects
-        friend std::ostream& operator<<(std::ostream& os, const Customer& customer) {
-        os << "Customer Name: " << customer.customer_name
-           << ", Order: " << customer.order
-           << ", Arrival Time: " << customer.cust_arrives;
-        return os;
-    }
 };
 
 std::vector<Customer> customer_vec;
