@@ -281,34 +281,8 @@ int main(){
                 clear_screen();
                 print_screen(current_customer, current_customer_order, my_cust_obj);
             }
-            else if((current_customer_order == "pepperoni pizza" || current_customer_order == "cheese pizza") && (input_command == "dough" || input_command == "cheese") && my_cust_obj->served == 0){
-                add_ingredient_to_order_vect(my_cust_obj, input_command);
-
-                clear_screen();
-                print_screen(current_customer, current_customer_order, my_cust_obj);
-                std::cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - " << std::endl;
-                std::cout << "Added ingredient: " << input_command << " for " << current_customer << "'s order. " << std::endl;
-                std::cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - " << std::endl;
-            }
-            else if(current_customer_order == "pepperoni pizza" && input_command == "pepperoni" && my_cust_obj->served == 0){
-                add_ingredient_to_order_vect(my_cust_obj, input_command);
-
-                clear_screen();
-                print_screen(current_customer, current_customer_order, my_cust_obj);
-                std::cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - " << std::endl;
-                std::cout << "Added ingredient: " << input_command << " for " << current_customer << "'s order. " << std::endl;
-                std::cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - " << std::endl;
-            }
-            else if((current_customer_order == "cheeseburger" || current_customer_order == "hamburger") && (input_command == "bun" || input_command == "patty") && my_cust_obj->served == 0){
-                add_ingredient_to_order_vect(my_cust_obj, input_command);
-
-                clear_screen();
-                print_screen(current_customer, current_customer_order, my_cust_obj);
-                std::cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - " << std::endl;
-                std::cout << "Added ingredient: " << input_command << " for " << current_customer << "'s order. " << std::endl;
-                std::cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - " << std::endl;
-            }
-            else if(current_customer_order == "cheeseburger" && input_command == "cheese" && my_cust_obj->served == 0){
+            //check commands valid for an order
+            else if((current_customer_order == "pepperoni pizza" || current_customer_order == "cheese pizza" || current_customer_order == "hamburger" || current_customer_order == "cheeseburger") && (input_command == "dough" || input_command == "cheese" || input_command == "patty" || input_command == "bun" || input_command == "pepperoni") && my_cust_obj->served == 0){
                 add_ingredient_to_order_vect(my_cust_obj, input_command);
 
                 clear_screen();
@@ -341,6 +315,7 @@ int main(){
                 print_screen(current_customer, current_customer_order, my_cust_obj);
             }
             else{
+                //check input name is a customer
                 for(int i = 0; i < customer_vec.size(); i++){
                     if(customer_vec[i].customer_name == input_command && customer_vec[i].served == 0){
                         current_customer.clear();
@@ -361,9 +336,9 @@ int main(){
         }
 
         elapsed = current_time - start_time + 1;
-
+        
+        //checking if each customer not served and tracks time since arrival to update poyout or exit customer
         for(int i = 0; i < customer_vec.size(); i++){
-            
             if(customer_vec[i].served == 0){
                 if(current_time - customer_vec[i].cust_arrives >= 15){
                     Customer* current_obj = find_cust_obj_by_string_name(customer_vec[i].customer_name);
@@ -372,16 +347,20 @@ int main(){
                         current_obj->served = 1;
                         customer_vec[i].served = 1;
                         std::cout <<  "Removed a customer!" << std::endl;
+                        if(current_customer == customer_vec[i].customer_name){
+                            current_customer.clear();
+                            current_customer_order.clear();
+
+                        }
                         clear_screen();
                         print_screen(current_customer, current_customer_order, current_obj);
                     }
                 }
                 
-                else if(current_time - customer_vec[i].cust_arrives < 15 && current_time - customer_vec[i].cust_arrives > 8 && customer_vec[i].price_reduced_flag == 0){
+                else if(current_time - customer_vec[i].cust_arrives < 15 && current_time - customer_vec[i].cust_arrives > 10 && customer_vec[i].price_reduced_flag == 0){
                     Customer* current_obj = find_cust_obj_by_string_name(customer_vec[i].customer_name);
                     if(current_obj){
-                        current_obj->max_payout *= .5;
-                        customer_vec[i].max_payout *= .5;
+                        current_obj->max_payout = static_cast<double>(current_obj->max_payout) / 2;
                         customer_vec[i].price_reduced_flag = 1;
                         current_obj->price_reduced_flag = 1;
                         std::cout <<  "Reduced a customer payout!" << std::endl;
