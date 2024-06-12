@@ -339,35 +339,29 @@ int main(){
         
         //checking if each customer not served and tracks time since arrival to update poyout or exit customer
         for(int i = 0; i < customer_vec.size(); i++){
-            if(customer_vec[i].served == 0){
-                if(current_time - customer_vec[i].cust_arrives >= 25){
-                    Customer* current_obj = find_cust_obj_by_string_name(customer_vec[i].customer_name);
-                    if(current_obj){
-                        total_earnings = total_earnings - (current_obj->max_payout * 2);
-                        current_obj->served = 1;
-                        customer_vec[i].served = 1;
-                        std::cout <<  "Removed a customer!" << std::endl;
-                        if(current_customer == customer_vec[i].customer_name){
-                            current_customer.clear();
-                            current_customer_order.clear();
+            Customer* current_obj = find_cust_obj_by_string_name(customer_vec[i].customer_name);
 
-                        }
-                        clear_screen();
-                        print_screen(current_customer, current_customer_order, current_obj);
-                    }
+            if(customer_vec[i].served == 0 && current_time - customer_vec[i].cust_arrives >= 25 && current_obj){
+                total_earnings = total_earnings - (current_obj->max_payout * 2);
+                current_obj->served = 1;
+                customer_vec[i].served = 1;
+                std::cout <<  "Removed a customer!" << std::endl;
+                if(current_customer == customer_vec[i].customer_name){
+                    current_customer.clear();
+                    current_customer_order.clear();
+
                 }
-                
-                else if(current_time - customer_vec[i].cust_arrives < 25 && current_time - customer_vec[i].cust_arrives > 20 && customer_vec[i].price_reduced_flag == 0){
-                    Customer* current_obj = find_cust_obj_by_string_name(customer_vec[i].customer_name);
-                    if(current_obj){
-                        current_obj->max_payout = static_cast<double>(current_obj->max_payout) / 2;
-                        customer_vec[i].price_reduced_flag = 1;
-                        current_obj->price_reduced_flag = 1;
-                        std::cout <<  "Reduced payout for: " << customer_vec[i].customer_name << std::endl;
-                    }
-                }
-                
+                clear_screen();
+                print_screen(current_customer, current_customer_order, current_obj);
+            
             }
+            else if(current_time - customer_vec[i].cust_arrives < 25 && current_time - customer_vec[i].cust_arrives > 20 && customer_vec[i].price_reduced_flag == 0 && current_obj){
+                    current_obj->max_payout = static_cast<double>(current_obj->max_payout) / 2;
+                    customer_vec[i].price_reduced_flag = 1;
+                    current_obj->price_reduced_flag = 1;
+                    std::cout <<  "Reduced payout for: " << customer_vec[i].customer_name << std::endl;
+            }
+                
             
         }
 
