@@ -70,7 +70,7 @@ class Customer{
         Return value is a string containing the customers name.*/
         static std::string pick_name(){
             std::string count_to_str = std::to_string(customer_count);
-            std::string customer_name = "Hungry " + count_to_str;
+            std::string customer_name = "hungry " + count_to_str;
 
             //customer_count++;
             return customer_name;
@@ -144,7 +144,7 @@ void clear_screen(){
 
 //function takes integer time argument and two string arguments to instantiate new customer object. 
 void new_customer(int total_time, std::string current_cust_selected, std::string current_customer_order){
-    if(total_time % 10 == 0){
+    if(total_time % 15 == 0){
         std::cout << "Time is: " << total_time << " looks like we need a new customer" << std::endl;
         std::string new_cust_name = Customer::pick_name();
         std::string new_cust_order = Customer::pick_order();
@@ -340,7 +340,7 @@ int main(){
         //checking if each customer not served and tracks time since arrival to update poyout or exit customer
         for(int i = 0; i < customer_vec.size(); i++){
             if(customer_vec[i].served == 0){
-                if(current_time - customer_vec[i].cust_arrives >= 15){
+                if(current_time - customer_vec[i].cust_arrives >= 25){
                     Customer* current_obj = find_cust_obj_by_string_name(customer_vec[i].customer_name);
                     if(current_obj){
                         total_earnings = total_earnings - (current_obj->max_payout * 2);
@@ -357,13 +357,13 @@ int main(){
                     }
                 }
                 
-                else if(current_time - customer_vec[i].cust_arrives < 15 && current_time - customer_vec[i].cust_arrives > 10 && customer_vec[i].price_reduced_flag == 0){
+                else if(current_time - customer_vec[i].cust_arrives < 25 && current_time - customer_vec[i].cust_arrives > 20 && customer_vec[i].price_reduced_flag == 0){
                     Customer* current_obj = find_cust_obj_by_string_name(customer_vec[i].customer_name);
                     if(current_obj){
                         current_obj->max_payout = static_cast<double>(current_obj->max_payout) / 2;
                         customer_vec[i].price_reduced_flag = 1;
                         current_obj->price_reduced_flag = 1;
-                        std::cout <<  "Reduced a customer payout!" << std::endl;
+                        std::cout <<  "Reduced payout for: " << customer_vec[i].customer_name << std::endl;
                     }
                 }
                 
@@ -373,7 +373,7 @@ int main(){
 
         input_command.clear();
 
-        if(elapsed > 59){
+        if(elapsed > 119){
             clear_screen();
             std::cout << "One minute has passed. Game over. You ended the game with: $" << total_earnings << std::endl;
             break;
